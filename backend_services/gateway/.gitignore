@@ -1,0 +1,42 @@
+# Binaries & build artifacts
+/server
+bin/
+tmp/
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+
+# Test binaries & coverage
+*.test
+*.out
+coverage/
+coverage.html
+coverage.txt
+
+# Environment & secrets
+.env
+.env.*
+!.env.example
+
+# Go workspace (local only)
+go.work
+go.work.sum
+
+# Dependency vendoring (if used)
+vendor/
+
+# Logs
+*.log
+
+# Editor & OS
+.vscode/*
+!.vscode/extensions.json
+.idea/
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?

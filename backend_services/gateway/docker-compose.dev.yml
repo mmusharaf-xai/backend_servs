@@ -1,0 +1,12 @@
+services:
+  gateway:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: dev
+    volumes:
+      - .:/app
+    environment:
+      ENV: development
+      DATABASE_URL: postgres://eol:${POSTGRES_PASSWORD:-eoldev}@postgres:5432/eol?sslmode=disable
+      REDIS_URL: redis://redis:6379/0
