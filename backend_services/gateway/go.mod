@@ -1,6 +1,6 @@
 module github.com/eternal-orbit-labs/gateway
 
-go 1.25.0
+go 1.25.5
 
 require (
 	github.com/alicebob/miniredis/v2 v2.38.0
@@ -45,6 +45,7 @@ require (
 	github.com/leodido/go-urn v1.4.0 // indirect
 	github.com/lib/pq v1.10.9 // indirect
 	github.com/mailru/easyjson v0.7.6 // indirect
+	github.com/mark3labs/mcp-go v0.56.0 // indirect
 	github.com/mattn/go-isatty v0.0.20 // indirect
 	github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd // indirect
 	github.com/modern-go/reflect2 v1.0.2 // indirect
