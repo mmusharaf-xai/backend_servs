@@ -5,10 +5,16 @@ import (
 	"crypto/rand"
 	"crypto/sha256"
 	"encoding/hex"
+	"errors"
 	"fmt"
 	"strings"
 
 	"github.com/eternal-orbit-labs/gateway/internal/domain"
+)
+
+var (
+	ErrInvalidAPIKeyFormat = errors.New("invalid api key format")
+	ErrInvalidAPIKey       = errors.New("invalid api key")
 )
 
 const apiKeyPrefix = "eol_k1_"
@@ -53,7 +59,7 @@ func (s *APIKeyService) Create(ctx context.Context, userID, label string) (*Crea
 
 func (s *APIKeyService) Authenticate(ctx context.Context, rawKey string) (*domain.PersonalAPIKey, error) {
 	if !strings.HasPrefix(rawKey, apiKeyPrefix) {
-		return nil, fmt.Errorf("invalid api key format")
+		return nil, ErrInvalidAPIKeyFormat
 	}
 
 	hash := sha256.Sum256([]byte(rawKey))
@@ -64,7 +70,7 @@ func (s *APIKeyService) Authenticate(ctx context.Context, rawKey string) (*domai
 		return nil, fmt.Errorf("lookup key: %w", err)
 	}
 	if key == nil {
-		return nil, fmt.Errorf("invalid api key")
+		return nil, ErrInvalidAPIKey
 	}
 
 	// Fire-and-forget last_used_at update

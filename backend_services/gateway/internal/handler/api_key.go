@@ -34,7 +34,7 @@ func (h *APIKeyHandler) Create(c *gin.Context) {
 		Label string `json:"label" binding:"required"`
 	}
 	if err := c.ShouldBindJSON(&req); err != nil {
-		badRequest(c, err.Error())
+		validationError(c, err)
 		return
 	}
 

@@ -85,7 +85,7 @@ func (h *AppOrgHandler) Create(c *gin.Context) {
 		Name string `json:"name" binding:"required"`
 	}
 	if err := c.ShouldBindJSON(&req); err != nil {
-		badRequest(c, err.Error())
+		validationError(c, err)
 		return
 	}
 
@@ -183,7 +183,7 @@ func (h *AppOrgHandler) CreateMember(c *gin.Context) {
 		Phone     *string `json:"phone"`
 	}
 	if err := c.ShouldBindJSON(&req); err != nil {
-		badRequest(c, err.Error())
+		validationError(c, err)
 		return
 	}
 
@@ -233,7 +233,7 @@ func (h *AppOrgHandler) CreateInvite(c *gin.Context) {
 		Phone     *string `json:"phone"`
 	}
 	if err := c.ShouldBindJSON(&req); err != nil {
-		badRequest(c, err.Error())
+		validationError(c, err)
 		return
 	}
 
@@ -284,7 +284,7 @@ func (h *AppOrgHandler) UpdateInvite(c *gin.Context) {
 		Status    string  `json:"status"`
 	}
 	if err := c.ShouldBindJSON(&req); err != nil {
-		badRequest(c, err.Error())
+		validationError(c, err)
 		return
 	}
 	if req.Status == "" {
@@ -369,7 +369,7 @@ func (h *AppOrgHandler) UpdateMember(c *gin.Context) {
 		Status string `json:"status" binding:"required"`
 	}
 	if err := c.ShouldBindJSON(&req); err != nil {
-		badRequest(c, err.Error())
+		validationError(c, err)
 		return
 	}
 
@@ -537,7 +537,7 @@ func (h *AppOrgHandler) CreateTeam(c *gin.Context) {
 		Name string `json:"name" binding:"required"`
 	}
 	if err := c.ShouldBindJSON(&req); err != nil {
-		badRequest(c, err.Error())
+		validationError(c, err)
 		return
 	}
 
@@ -635,7 +635,7 @@ func (h *AppOrgHandler) AddTeamMembers(c *gin.Context) {
 		UserIDs []string `json:"user_ids" binding:"required"`
 	}
 	if err := c.ShouldBindJSON(&req); err != nil {
-		badRequest(c, err.Error())
+		validationError(c, err)
 		return
 	}
 
@@ -701,7 +701,7 @@ func (h *AppOrgHandler) BulkRemoveTeamMembers(c *gin.Context) {
 		UserIDs []string `json:"user_ids" binding:"required"`
 	}
 	if err := c.ShouldBindJSON(&req); err != nil {
-		badRequest(c, err.Error())
+		validationError(c, err)
 		return
 	}
 

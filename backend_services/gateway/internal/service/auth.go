@@ -5,6 +5,7 @@ import (
 	"crypto/rand"
 	"crypto/sha256"
 	"encoding/hex"
+	"errors"
 	"fmt"
 	"time"
 
@@ -12,6 +13,15 @@ import (
 
 	"github.com/eternal-orbit-labs/gateway/internal/domain"
 	"github.com/eternal-orbit-labs/gateway/internal/platform"
+)
+
+var (
+	ErrEmailAlreadyExists       = errors.New("email already exists")
+	ErrInvalidCredentials       = errors.New("invalid credentials")
+	ErrGoogleLoginOnly          = errors.New("this account uses Google login")
+	ErrTooManyLoginAttempts     = errors.New("too many login attempts")
+	ErrInvalidRefreshToken      = errors.New("invalid refresh token")
+	ErrCurrentPasswordIncorrect = errors.New("current password incorrect")
 )
 
 type SessionCache interface {
@@ -74,7 +84,7 @@ func (s *AuthService) Signup(ctx context.Context, in SignupInput) (*AuthResult, 
 		return nil, fmt.Errorf("check existing: %w", err)
 	}
 	if existing != nil {
-		return nil, fmt.Errorf("email already exists")
+		return nil, ErrEmailAlreadyExists
 	}
 
 	hash, err := bcrypt.GenerateFromPassword([]byte(in.Password), 12)
@@ -103,7 +113,7 @@ func (s *AuthService) Login(ctx context.Context, in LoginInput, ip, userAgent st
 	rateLimitKey := ip + ":" + in.Email
 	attempts, _ := s.rateLimiter.GetLoginAttempts(ctx, rateLimitKey)
 	if attempts >= 10 {
-		return nil, fmt.Errorf("too many login attempts, please try again later")
+		return nil, ErrTooManyLoginAttempts
 	}
 
 	user, err := s.users.GetByEmail(ctx, in.Email)
@@ -112,16 +122,16 @@ func (s *AuthService) Login(ctx context.Context, in LoginInput, ip, userAgent st
 	}
 	if user == nil {
 		s.rateLimiter.IncrementLoginAttempts(ctx, rateLimitKey)
-		return nil, fmt.Errorf("invalid credentials")
+		return nil, ErrInvalidCredentials
 	}
 
 	if user.PasswordHash == "" {
-		return nil, fmt.Errorf("this account uses Google login")
+		return nil, ErrGoogleLoginOnly
 	}
 
 	if err := bcrypt.CompareHashAndPassword([]byte(user.PasswordHash), []byte(in.Password)); err != nil {
 		s.rateLimiter.IncrementLoginAttempts(ctx, rateLimitKey)
-		return nil, fmt.Errorf("invalid credentials")
+		return nil, ErrInvalidCredentials
 	}
 
 	return s.issueTokens(ctx, user, ip, userAgent)
@@ -134,7 +144,7 @@ func (s *AuthService) Refresh(ctx context.Context, rawToken, ip, userAgent strin
 		return nil, fmt.Errorf("lookup session: %w", err)
 	}
 	if session == nil {
-		return nil, fmt.Errorf("invalid refresh token")
+		return nil, ErrInvalidRefreshToken
 	}
 
 	// Delete old session from both Postgres and Redis (rotation)
@@ -145,7 +155,7 @@ func (s *AuthService) Refresh(ctx context.Context, rawToken, ip, userAgent strin
 
 	user, err := s.users.GetByID(ctx, session.UserID)
 	if err != nil || user == nil {
-		return nil, fmt.Errorf("user not found")
+		return nil, ErrUserNotFound
 	}
 
 	return s.issueTokens(ctx, user, ip, userAgent)
@@ -168,7 +178,7 @@ func (s *AuthService) GetMe(ctx context.Context, userID string) (*domain.User, e
 func (s *AuthService) UpdateProfile(ctx context.Context, userID string, firstName, lastName *string) (*domain.User, error) {
 	user, err := s.users.GetByID(ctx, userID)
 	if err != nil || user == nil {
-		return nil, fmt.Errorf("user not found")
+		return nil, ErrUserNotFound
 	}
 	if firstName != nil {
 		user.FirstName = *firstName
@@ -185,14 +195,14 @@ func (s *AuthService) UpdateProfile(ctx context.Context, userID string, firstNam
 func (s *AuthService) ChangePassword(ctx context.Context, userID, currentPassword, newPassword string) error {
 	user, err := s.users.GetByID(ctx, userID)
 	if err != nil || user == nil {
-		return fmt.Errorf("user not found")
+		return ErrUserNotFound
 	}
 	if user.PasswordHash != "" {
 		if currentPassword == "" {
-			return fmt.Errorf("current password incorrect")
+			return ErrCurrentPasswordIncorrect
 		}
 		if err := bcrypt.CompareHashAndPassword([]byte(user.PasswordHash), []byte(currentPassword)); err != nil {
-			return fmt.Errorf("current password incorrect")
+			return ErrCurrentPasswordIncorrect
 		}
 	}
 	hash, err := bcrypt.GenerateFromPassword([]byte(newPassword), 12)

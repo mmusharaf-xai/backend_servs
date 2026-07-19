@@ -1,4 +1,4 @@
-.PHONY: run run-local build migrate-up migrate-down tidy deps dev
+.PHONY: run run-local build migrate-up migrate-down tidy deps dev test test-cover
 
 # Start local Postgres + Redis (requires Docker)
 deps:
@@ -30,3 +30,9 @@ migrate-down:
 
 seed-org-users:
 	go run ./cmd/seed-org-users $(ARGS)
+
+test:
+	go test ./... -v -count=1
+
+test-cover:
+	go test ./... -coverprofile=coverage.out && go tool cover -html=coverage.out

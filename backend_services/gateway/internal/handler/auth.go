@@ -1,8 +1,8 @@
 package handler
 
 import (
+	"errors"
 	"net/http"
-	"strings"
 	"time"
 
 	"github.com/gin-gonic/gin"
@@ -41,7 +41,7 @@ func (h *AuthHandler) Signup(c *gin.Context) {
 		LastName  string `json:"last_name"`
 	}
 	if err := c.ShouldBindJSON(&req); err != nil {
-		badRequest(c, err.Error())
+		validationError(c, err)
 		return
 	}
 
@@ -52,7 +52,7 @@ func (h *AuthHandler) Signup(c *gin.Context) {
 		LastName:  req.LastName,
 	})
 	if err != nil {
-		if strings.Contains(err.Error(), "email already exists") {
+		if errors.Is(err, service.ErrEmailAlreadyExists) {
 			badRequest(c, "email already exists")
 			return
 		}
@@ -83,7 +83,7 @@ func (h *AuthHandler) Login(c *gin.Context) {
 		Password string `json:"password" binding:"required"`
 	}
 	if err := c.ShouldBindJSON(&req); err != nil {
-		badRequest(c, err.Error())
+		validationError(c, err)
 		return
 	}
 
@@ -92,11 +92,11 @@ func (h *AuthHandler) Login(c *gin.Context) {
 		Password: req.Password,
 	}, clientIP(c), c.GetHeader("User-Agent"))
 	if err != nil {
-		if strings.Contains(err.Error(), "invalid credentials") || strings.Contains(err.Error(), "Google login") {
+		if errors.Is(err, service.ErrInvalidCredentials) || errors.Is(err, service.ErrGoogleLoginOnly) {
 			unauthorized(c, err.Error())
 			return
 		}
-		if strings.Contains(err.Error(), "too many") {
+		if errors.Is(err, service.ErrTooManyLoginAttempts) {
 			c.JSON(http.StatusTooManyRequests, gin.H{"error": err.Error()})
 			return
 		}
@@ -192,7 +192,7 @@ func (h *AuthHandler) UpdateMe(c *gin.Context) {
 		LastName  *string `json:"last_name"`
 	}
 	if err := c.ShouldBindJSON(&req); err != nil {
-		badRequest(c, err.Error())
+		validationError(c, err)
 		return
 	}
 
@@ -225,13 +225,13 @@ func (h *AuthHandler) ChangePassword(c *gin.Context) {
 		NewPassword     string `json:"new_password" binding:"required,min=8"`
 	}
 	if err := c.ShouldBindJSON(&req); err != nil {
-		badRequest(c, err.Error())
+		validationError(c, err)
 		return
 	}
 
 	userID := middleware.GetUserID(c)
 	if err := h.auth.ChangePassword(c.Request.Context(), userID, req.CurrentPassword, req.NewPassword); err != nil {
-		if strings.Contains(err.Error(), "incorrect") || strings.Contains(err.Error(), "no password") {
+		if errors.Is(err, service.ErrCurrentPasswordIncorrect) {
 			badRequest(c, err.Error())
 			return
 		}
