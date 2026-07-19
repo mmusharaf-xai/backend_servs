@@ -22,6 +22,17 @@ func NewAuthHandler(auth *service.AuthService, accessTTL, refreshTTL time.Durati
 	return &AuthHandler{auth: auth, accessTTL: accessTTL, refreshTTL: refreshTTL, isDev: isDev}
 }
 
+// Signup godoc
+// @Summary      Create a new account
+// @Description  Register a new user with email and password. Sets httpOnly auth cookies on success.
+// @Tags         Auth
+// @Accept       json
+// @Produce      json
+// @Param        body  body      SignupRequest  true  "Signup credentials"
+// @Success      201   {object}  SuccessResponse
+// @Failure      400   {object}  ErrorResponse
+// @Failure      500   {object}  ErrorResponse
+// @Router       /api/auth/signup [post]
 func (h *AuthHandler) Signup(c *gin.Context) {
 	var req struct {
 		Email     string `json:"email" binding:"required,email"`
@@ -53,6 +64,19 @@ func (h *AuthHandler) Signup(c *gin.Context) {
 	created(c, gin.H{"success": true})
 }
 
+// Login godoc
+// @Summary      Log in
+// @Description  Authenticate with email and password. Sets httpOnly auth cookies on success.
+// @Tags         Auth
+// @Accept       json
+// @Produce      json
+// @Param        body  body      LoginRequest  true  "Login credentials"
+// @Success      200   {object}  SuccessResponse
+// @Failure      400   {object}  ErrorResponse
+// @Failure      401   {object}  ErrorResponse
+// @Failure      429   {object}  ErrorResponse
+// @Failure      500   {object}  ErrorResponse
+// @Router       /api/auth/login [post]
 func (h *AuthHandler) Login(c *gin.Context) {
 	var req struct {
 		Email    string `json:"email" binding:"required,email"`
@@ -84,6 +108,14 @@ func (h *AuthHandler) Login(c *gin.Context) {
 	ok(c, gin.H{"success": true})
 }
 
+// Refresh godoc
+// @Summary      Refresh access token
+// @Description  Exchange the refresh token cookie for a new access token. Rotates the refresh token.
+// @Tags         Auth
+// @Produce      json
+// @Success      200  {object}  UserResponse
+// @Failure      401  {object}  ErrorResponse
+// @Router       /api/auth/refresh [post]
 func (h *AuthHandler) Refresh(c *gin.Context) {
 	rawToken, err := c.Cookie("eol_refresh")
 	if err != nil || rawToken == "" {
@@ -104,6 +136,13 @@ func (h *AuthHandler) Refresh(c *gin.Context) {
 	})
 }
 
+// Logout godoc
+// @Summary      Log out
+// @Description  Invalidate the current session and clear auth cookies.
+// @Tags         Auth
+// @Produce      json
+// @Success      200  {object}  MessageResponse
+// @Router       /api/auth/logout [post]
 func (h *AuthHandler) Logout(c *gin.Context) {
 	rawToken, _ := c.Cookie("eol_refresh")
 	if rawToken != "" {
@@ -113,6 +152,16 @@ func (h *AuthHandler) Logout(c *gin.Context) {
 	ok(c, gin.H{"message": "logged out"})
 }
 
+// Me godoc
+// @Summary      Get current user
+// @Description  Returns the authenticated user's profile.
+// @Tags         Auth
+// @Produce      json
+// @Security     CookieAuth
+// @Security     BearerAPIKey
+// @Success      200  {object}  UserResponse
+// @Failure      401  {object}  ErrorResponse
+// @Router       /api/auth/me [get]
 func (h *AuthHandler) Me(c *gin.Context) {
 	userID := middleware.GetUserID(c)
 	user, err := h.auth.GetMe(c.Request.Context(), userID)
@@ -123,6 +172,20 @@ func (h *AuthHandler) Me(c *gin.Context) {
 	ok(c, gin.H{"user": user})
 }
 
+// UpdateMe godoc
+// @Summary      Update profile
+// @Description  Update the authenticated user's first name and/or last name.
+// @Tags         Auth
+// @Accept       json
+// @Produce      json
+// @Security     CookieAuth
+// @Security     BearerAPIKey
+// @Param        body  body      UpdateMeRequest  true  "Fields to update"
+// @Success      200   {object}  UserResponse
+// @Failure      400   {object}  ErrorResponse
+// @Failure      401   {object}  ErrorResponse
+// @Failure      500   {object}  ErrorResponse
+// @Router       /api/auth/me [patch]
 func (h *AuthHandler) UpdateMe(c *gin.Context) {
 	var req struct {
 		FirstName *string `json:"first_name"`
@@ -142,6 +205,20 @@ func (h *AuthHandler) UpdateMe(c *gin.Context) {
 	ok(c, gin.H{"user": user})
 }
 
+// ChangePassword godoc
+// @Summary      Change password
+// @Description  Change the authenticated user's password. Requires current password (unless the account was created via OAuth).
+// @Tags         Auth
+// @Accept       json
+// @Produce      json
+// @Security     CookieAuth
+// @Security     BearerAPIKey
+// @Param        body  body      ChangePasswordRequest  true  "Password change payload"
+// @Success      200   {object}  MessageResponse
+// @Failure      400   {object}  ErrorResponse
+// @Failure      401   {object}  ErrorResponse
+// @Failure      500   {object}  ErrorResponse
+// @Router       /api/auth/change-password [post]
 func (h *AuthHandler) ChangePassword(c *gin.Context) {
 	var req struct {
 		CurrentPassword string `json:"current_password"`

@@ -42,6 +42,13 @@ func NewOAuthHandler(auth *service.AuthService, clientID, clientSecret, redirect
 	}
 }
 
+// GoogleRedirect godoc
+// @Summary      Start Google OAuth
+// @Description  Redirects the user to Google's consent screen. Sets an oauth_state cookie for CSRF protection.
+// @Tags         OAuth
+// @Success      307  "Redirect to Google"
+// @Failure      400  {object}  ErrorResponse
+// @Router       /api/auth/google [get]
 func (h *OAuthHandler) GoogleRedirect(c *gin.Context) {
 	if h.oauthCfg.ClientID == "" {
 		badRequest(c, "google oauth not configured")
@@ -53,6 +60,15 @@ func (h *OAuthHandler) GoogleRedirect(c *gin.Context) {
 	c.Redirect(http.StatusTemporaryRedirect, h.oauthCfg.AuthCodeURL(state))
 }
 
+// GoogleCallback godoc
+// @Summary      Google OAuth callback
+// @Description  Handles the OAuth callback from Google. Validates state, exchanges code for tokens, creates or links user account, sets auth cookies, and redirects to frontend.
+// @Tags         OAuth
+// @Param        state  query  string  true   "OAuth state parameter"
+// @Param        code   query  string  true   "Authorization code"
+// @Success      307    "Redirect to frontend"
+// @Failure      307    "Redirect to frontend with error"
+// @Router       /api/auth/google/callback [get]
 func (h *OAuthHandler) GoogleCallback(c *gin.Context) {
 	stateCookie, err := c.Cookie("oauth_state")
 	if err != nil || stateCookie == "" || stateCookie != c.Query("state") {

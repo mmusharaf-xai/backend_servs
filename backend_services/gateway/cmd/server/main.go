@@ -12,6 +12,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/joho/godotenv"
+	scalar "github.com/MarceloPetrucio/go-scalar-api-reference"
 	"github.com/redis/go-redis/v9"
 
 	"github.com/eternal-orbit-labs/gateway/internal/config"
@@ -20,7 +21,27 @@ import (
 	"github.com/eternal-orbit-labs/gateway/internal/platform"
 	"github.com/eternal-orbit-labs/gateway/internal/repository"
 	"github.com/eternal-orbit-labs/gateway/internal/service"
+
+	_ "github.com/eternal-orbit-labs/gateway/docs"
 )
+
+// @title           EOL Gateway API
+// @version         1.0
+// @description     API gateway for Eternal Orbit Labs — authentication, organizations, teams, and app management.
+//
+// @host            localhost:8080
+// @BasePath        /
+// @schemes         http https
+//
+// @securityDefinitions.apikey CookieAuth
+// @in                         cookie
+// @name                       eol_access
+// @description                JWT access token set automatically on login/signup.
+//
+// @securityDefinitions.apikey BearerAPIKey
+// @in                         header
+// @name                       Authorization
+// @description                Personal API key — send as "Bearer eol_k1_..."
 
 func main() {
 	godotenv.Load()
@@ -148,9 +169,35 @@ func main() {
 	protected.DELETE("/apps/:slug/orgs/:orgId/teams/:teamId/members", appOrgHandler.BulkRemoveTeamMembers)
 
 	// Health check
+	//
+	// @Summary      Health check
+	// @Description  Returns the service health status.
+	// @Tags         Health
+	// @Produce      json
+	// @Success      200  {object}  handler.HealthResponse
+	// @Router       /api/health [get]
 	api.GET("/health", func(c *gin.Context) {
 		c.JSON(http.StatusOK, gin.H{"status": "ok"})
 	})
+
+	// API Docs — Scalar UI (no auth required)
+	r.GET("/api/docs", func(c *gin.Context) {
+		htmlContent, err := scalar.ApiReferenceHTML(&scalar.Options{
+			SpecURL: "./docs/swagger.json",
+			CustomOptions: scalar.CustomOptions{
+				PageTitle: "EOL Gateway API",
+			},
+			DarkMode:   true,
+			Theme:      scalar.ThemeKepler,
+			HideModels: true,
+		})
+		if err != nil {
+			c.String(http.StatusInternalServerError, "failed to generate docs: %v", err)
+			return
+		}
+		c.Data(http.StatusOK, "text/html; charset=utf-8", []byte(htmlContent))
+	})
+	r.StaticFile("/api/docs/swagger.json", "./docs/swagger.json")
 
 	// Server
 	srv := &http.Server{

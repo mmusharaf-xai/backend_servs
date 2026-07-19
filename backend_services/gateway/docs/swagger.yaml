@@ -1,0 +1,1909 @@
+basePath: /
+definitions:
+  github_com_eternal-orbit-labs_gateway_internal_domain.App:
+    properties:
+      category:
+        type: string
+      created_at:
+        type: string
+      description:
+        type: string
+      icon:
+        type: string
+      id:
+        type: string
+      name:
+        type: string
+      slug:
+        type: string
+      sort_order:
+        type: integer
+      status:
+        type: string
+      tagline:
+        type: string
+      updated_at:
+        type: string
+    type: object
+  github_com_eternal-orbit-labs_gateway_internal_domain.AppOrgInvite:
+    properties:
+      accepted_at:
+        type: string
+      created_at:
+        type: string
+      email:
+        type: string
+      first_name:
+        type: string
+      id:
+        type: string
+      invited_by_user_id:
+        type: string
+      last_name:
+        type: string
+      org_id:
+        type: string
+      phone:
+        type: string
+      status:
+        type: string
+    type: object
+  github_com_eternal-orbit-labs_gateway_internal_domain.AppOrgInviteListItem:
+    properties:
+      created_at:
+        type: string
+      id:
+        type: string
+      org_id:
+        type: string
+      org_name:
+        type: string
+      status:
+        type: string
+    type: object
+  github_com_eternal-orbit-labs_gateway_internal_domain.AppOrgListItem:
+    properties:
+      id:
+        type: string
+      name:
+        type: string
+      role:
+        type: string
+      status:
+        type: string
+    type: object
+  github_com_eternal-orbit-labs_gateway_internal_domain.OrgUserListItem:
+    properties:
+      email:
+        type: string
+      first_name:
+        type: string
+      id:
+        type: string
+      last_name:
+        type: string
+      phone:
+        type: string
+      role:
+        type: string
+      status:
+        type: string
+    type: object
+  github_com_eternal-orbit-labs_gateway_internal_domain.PersonalAPIKey:
+    properties:
+      created_at:
+        type: string
+      id:
+        type: string
+      label:
+        type: string
+      last_used_at:
+        type: string
+      prefix:
+        type: string
+      user_id:
+        type: string
+    type: object
+  github_com_eternal-orbit-labs_gateway_internal_domain.TeamCreatedBy:
+    properties:
+      first_name:
+        type: string
+      id:
+        type: string
+      last_name:
+        type: string
+    type: object
+  github_com_eternal-orbit-labs_gateway_internal_domain.TeamListItem:
+    properties:
+      created_at:
+        type: string
+      created_by:
+        $ref: '#/definitions/github_com_eternal-orbit-labs_gateway_internal_domain.TeamCreatedBy'
+      id:
+        type: string
+      member_count:
+        type: integer
+      name:
+        type: string
+    type: object
+  github_com_eternal-orbit-labs_gateway_internal_domain.User:
+    properties:
+      avatar_url:
+        type: string
+      created_at:
+        type: string
+      email:
+        type: string
+      email_verified:
+        type: boolean
+      first_name:
+        type: string
+      id:
+        type: string
+      last_name:
+        type: string
+      phone:
+        type: string
+      updated_at:
+        type: string
+    type: object
+  github_com_eternal-orbit-labs_gateway_internal_pagination.Meta:
+    properties:
+      limit:
+        type: integer
+      page:
+        type: integer
+      total:
+        type: integer
+      total_pages:
+        type: integer
+    type: object
+  internal_handler.AddTeamMembersRequest:
+    properties:
+      user_ids:
+        example:
+        - '["user-id-1"'
+        - '"user-id-2"]'
+        items:
+          type: string
+        type: array
+    required:
+    - user_ids
+    type: object
+  internal_handler.AppGetResponse:
+    properties:
+      app:
+        $ref: '#/definitions/github_com_eternal-orbit-labs_gateway_internal_domain.App'
+    type: object
+  internal_handler.AppListResponse:
+    properties:
+      apps:
+        items:
+          $ref: '#/definitions/github_com_eternal-orbit-labs_gateway_internal_domain.App'
+        type: array
+      next_cursor:
+        example: ""
+        type: string
+    type: object
+  internal_handler.BulkRemoveTeamMembersRequest:
+    properties:
+      user_ids:
+        items:
+          type: string
+        type: array
+    required:
+    - user_ids
+    type: object
+  internal_handler.ChangePasswordRequest:
+    properties:
+      current_password:
+        example: oldP@ss1
+        type: string
+      new_password:
+        example: newSecureP@ss1
+        minLength: 8
+        type: string
+    required:
+    - new_password
+    type: object
+  internal_handler.CreateAPIKeyRequest:
+    properties:
+      label:
+        example: my-key
+        type: string
+    required:
+    - label
+    type: object
+  internal_handler.CreateAPIKeyResponse:
+    properties:
+      key:
+        $ref: '#/definitions/github_com_eternal-orbit-labs_gateway_internal_domain.PersonalAPIKey'
+      raw_value:
+        example: eol_k1_abc123...
+        type: string
+    type: object
+  internal_handler.CreateInviteRequest:
+    properties:
+      email:
+        example: invite@example.com
+        type: string
+      first_name:
+        example: Bob
+        type: string
+      last_name:
+        example: Williams
+        type: string
+      phone:
+        example: "+1987654321"
+        type: string
+    required:
+    - email
+    type: object
+  internal_handler.CreateMemberRequest:
+    properties:
+      email:
+        example: member@example.com
+        type: string
+      first_name:
+        example: Alice
+        type: string
+      last_name:
+        example: Johnson
+        type: string
+      phone:
+        example: "+1234567890"
+        type: string
+    required:
+    - email
+    type: object
+  internal_handler.CreateOrgRequest:
+    properties:
+      name:
+        example: Acme Corp
+        type: string
+    required:
+    - name
+    type: object
+  internal_handler.CreateTeamRequest:
+    properties:
+      name:
+        example: Engineering
+        type: string
+    required:
+    - name
+    type: object
+  internal_handler.ErrorResponse:
+    properties:
+      error:
+        example: error message
+        type: string
+    type: object
+  internal_handler.InviteResponse:
+    properties:
+      invite:
+        $ref: '#/definitions/github_com_eternal-orbit-labs_gateway_internal_domain.AppOrgInvite'
+    type: object
+  internal_handler.ListAPIKeysResponse:
+    properties:
+      keys:
+        items:
+          $ref: '#/definitions/github_com_eternal-orbit-labs_gateway_internal_domain.PersonalAPIKey'
+        type: array
+    type: object
+  internal_handler.LoginRequest:
+    properties:
+      email:
+        example: user@example.com
+        type: string
+      password:
+        example: secureP@ss1
+        type: string
+    required:
+    - email
+    - password
+    type: object
+  internal_handler.MemberListResponse:
+    properties:
+      data:
+        items:
+          $ref: '#/definitions/github_com_eternal-orbit-labs_gateway_internal_domain.OrgUserListItem'
+        type: array
+      meta:
+        $ref: '#/definitions/github_com_eternal-orbit-labs_gateway_internal_pagination.Meta'
+    type: object
+  internal_handler.MessageResponse:
+    properties:
+      message:
+        example: operation completed
+        type: string
+    type: object
+  internal_handler.OrgListResponse:
+    properties:
+      invites:
+        items:
+          $ref: '#/definitions/github_com_eternal-orbit-labs_gateway_internal_domain.AppOrgInviteListItem'
+        type: array
+      organizations:
+        items:
+          $ref: '#/definitions/github_com_eternal-orbit-labs_gateway_internal_domain.AppOrgListItem'
+        type: array
+    type: object
+  internal_handler.OrgResponse:
+    properties:
+      organization:
+        $ref: '#/definitions/github_com_eternal-orbit-labs_gateway_internal_domain.AppOrgListItem'
+    type: object
+  internal_handler.SidebarItem:
+    properties:
+      icon:
+        example: layout-dashboard
+        type: string
+      id:
+        example: dashboard
+        type: string
+      label:
+        example: Dashboard
+        type: string
+      path:
+        example: dashboard
+        type: string
+      position:
+        example: top
+        type: string
+    type: object
+  internal_handler.SidebarResponse:
+    properties:
+      app_slug:
+        example: my-app
+        type: string
+      org_id:
+        example: org-123
+        type: string
+      sections:
+        items:
+          $ref: '#/definitions/internal_handler.SidebarSection'
+        type: array
+    type: object
+  internal_handler.SidebarSection:
+    properties:
+      collapsible:
+        example: true
+        type: boolean
+      default_expanded:
+        example: true
+        type: boolean
+      id:
+        example: main
+        type: string
+      items:
+        items:
+          $ref: '#/definitions/internal_handler.SidebarItem'
+        type: array
+      label:
+        example: Main
+        type: string
+    type: object
+  internal_handler.SignupRequest:
+    properties:
+      email:
+        example: user@example.com
+        type: string
+      first_name:
+        example: John
+        type: string
+      last_name:
+        example: Doe
+        type: string
+      password:
+        example: secureP@ss1
+        minLength: 8
+        type: string
+    required:
+    - email
+    - first_name
+    - password
+    type: object
+  internal_handler.SuccessResponse:
+    properties:
+      success:
+        example: true
+        type: boolean
+    type: object
+  internal_handler.TeamListResponse:
+    properties:
+      data:
+        items:
+          $ref: '#/definitions/github_com_eternal-orbit-labs_gateway_internal_domain.TeamListItem'
+        type: array
+      meta:
+        $ref: '#/definitions/github_com_eternal-orbit-labs_gateway_internal_pagination.Meta'
+    type: object
+  internal_handler.TeamMemberListResponse:
+    properties:
+      data:
+        items:
+          $ref: '#/definitions/github_com_eternal-orbit-labs_gateway_internal_domain.OrgUserListItem'
+        type: array
+      meta:
+        $ref: '#/definitions/github_com_eternal-orbit-labs_gateway_internal_pagination.Meta'
+    type: object
+  internal_handler.TeamResponse:
+    properties:
+      team:
+        $ref: '#/definitions/github_com_eternal-orbit-labs_gateway_internal_domain.TeamListItem'
+    type: object
+  internal_handler.UpdateInviteRequest:
+    properties:
+      email:
+        example: invite@example.com
+        type: string
+      first_name:
+        example: Bob
+        type: string
+      last_name:
+        example: Williams
+        type: string
+      phone:
+        example: "+1987654321"
+        type: string
+      status:
+        example: active
+        type: string
+    required:
+    - email
+    type: object
+  internal_handler.UpdateMeRequest:
+    properties:
+      first_name:
+        example: Jane
+        type: string
+      last_name:
+        example: Smith
+        type: string
+    type: object
+  internal_handler.UpdateMemberRequest:
+    properties:
+      status:
+        example: active
+        type: string
+    required:
+    - status
+    type: object
+  internal_handler.UserResponse:
+    properties:
+      user:
+        $ref: '#/definitions/github_com_eternal-orbit-labs_gateway_internal_domain.User'
+    type: object
+host: localhost:8080
+info:
+  contact: {}
+  description: API gateway for Eternal Orbit Labs — authentication, organizations,
+    teams, and app management.
+  title: EOL Gateway API
+  version: "1.0"
+paths:
+  /api/apps:
+    get:
+      description: Returns a paginated list of apps. Supports cursor-based pagination
+        and search.
+      parameters:
+      - description: Search query
+        in: query
+        name: q
+        type: string
+      - description: Pagination cursor
+        in: query
+        name: cursor
+        type: string
+      - default: 20
+        description: Results per page (max 100)
+        in: query
+        name: limit
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/internal_handler.AppListResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/internal_handler.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/internal_handler.ErrorResponse'
+      security:
+      - CookieAuth: []
+      - BearerAPIKey: []
+      summary: List apps
+      tags:
+      - Apps
+  /api/apps/{slug}:
+    get:
+      description: Returns a single app by its URL slug.
+      parameters:
+      - description: App slug
+        in: path
+        name: slug
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/internal_handler.AppGetResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/internal_handler.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/internal_handler.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/internal_handler.ErrorResponse'
+      security:
+      - CookieAuth: []
+      - BearerAPIKey: []
+      summary: Get app by slug
+      tags:
+      - Apps
+  /api/apps/{slug}/invites/{inviteId}/accept:
+    post:
+      description: Accept a pending organization invite. The user must be the invite
+        recipient.
+      parameters:
+      - description: App slug
+        in: path
+        name: slug
+        required: true
+        type: string
+      - description: Invite ID
+        in: path
+        name: inviteId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/internal_handler.OrgResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/internal_handler.ErrorResponse'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/internal_handler.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/internal_handler.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/internal_handler.ErrorResponse'
+      security:
+      - CookieAuth: []
+      - BearerAPIKey: []
+      summary: Accept invite
+      tags:
+      - Invites
+  /api/apps/{slug}/orgs:
+    get:
+      description: Returns the authenticated user's organizations and pending invites
+        for the given app.
+      parameters:
+      - description: App slug
+        in: path
+        name: slug
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/internal_handler.OrgListResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/internal_handler.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/internal_handler.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/internal_handler.ErrorResponse'
+      security:
+      - CookieAuth: []
+      - BearerAPIKey: []
+      summary: List user's organizations
+      tags:
+      - Organizations
+    post:
+      consumes:
+      - application/json
+      description: Create a new organization under the given app. The authenticated
+        user becomes the owner.
+      parameters:
+      - description: App slug
+        in: path
+        name: slug
+        required: true
+        type: string
+      - description: Organization details
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/internal_handler.CreateOrgRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/internal_handler.OrgResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/internal_handler.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/internal_handler.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/internal_handler.ErrorResponse'
+        "409":
+          description: Conflict
+          schema:
+            $ref: '#/definitions/internal_handler.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/internal_handler.ErrorResponse'
+      security:
+      - CookieAuth: []
+      - BearerAPIKey: []
+      summary: Create organization
+      tags:
+      - Organizations
+  /api/apps/{slug}/orgs/{orgId}:
+    get:
+      description: Returns organization details. Requires the user to be a member.
+      parameters:
+      - description: App slug
+        in: path
+        name: slug
+        required: true
+        type: string
+      - description: Organization ID
+        in: path
+        name: orgId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/internal_handler.OrgResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/internal_handler.ErrorResponse'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/internal_handler.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/internal_handler.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/internal_handler.ErrorResponse'
+      security:
+      - CookieAuth: []
+      - BearerAPIKey: []
+      summary: Get organization
+      tags:
+      - Organizations
+  /api/apps/{slug}/orgs/{orgId}/invites:
+    post:
+      consumes:
+      - application/json
+      description: Send an invitation to join the organization.
+      parameters:
+      - description: App slug
+        in: path
+        name: slug
+        required: true
+        type: string
+      - description: Organization ID
+        in: path
+        name: orgId
+        required: true
+        type: string
+      - description: Invite details
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/internal_handler.CreateInviteRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/internal_handler.InviteResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/internal_handler.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/internal_handler.ErrorResponse'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/internal_handler.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/internal_handler.ErrorResponse'
+        "409":
+          description: Conflict
+          schema:
+            $ref: '#/definitions/internal_handler.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/internal_handler.ErrorResponse'
+      security:
+      - CookieAuth: []
+      - BearerAPIKey: []
+      summary: Create invite
+      tags:
+      - Invites
+  /api/apps/{slug}/orgs/{orgId}/invites/{inviteId}:
+    delete:
+      description: Permanently delete a pending invitation.
+      parameters:
+      - description: App slug
+        in: path
+        name: slug
+        required: true
+        type: string
+      - description: Organization ID
+        in: path
+        name: orgId
+        required: true
+        type: string
+      - description: Invite ID
+        in: path
+        name: inviteId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: No Content
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/internal_handler.ErrorResponse'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/internal_handler.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/internal_handler.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/internal_handler.ErrorResponse'
+      security:
+      - CookieAuth: []
+      - BearerAPIKey: []
+      summary: Delete invite
+      tags:
+      - Invites
+    patch:
+      consumes:
+      - application/json
+      description: Update a pending invite's details (email, name, phone, status).
+      parameters:
+      - description: App slug
+        in: path
+        name: slug
+        required: true
+        type: string
+      - description: Organization ID
+        in: path
+        name: orgId
+        required: true
+        type: string
+      - description: Invite ID
+        in: path
+        name: inviteId
+        required: true
+        type: string
+      - description: Updated invite details
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/internal_handler.UpdateInviteRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/internal_handler.InviteResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/internal_handler.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/internal_handler.ErrorResponse'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/internal_handler.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/internal_handler.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/internal_handler.ErrorResponse'
+      security:
+      - CookieAuth: []
+      - BearerAPIKey: []
+      summary: Update invite
+      tags:
+      - Invites
+  /api/apps/{slug}/orgs/{orgId}/members:
+    get:
+      description: Returns a paginated list of organization members with optional
+        filters.
+      parameters:
+      - description: App slug
+        in: path
+        name: slug
+        required: true
+        type: string
+      - description: Organization ID
+        in: path
+        name: orgId
+        required: true
+        type: string
+      - default: 1
+        description: Page number
+        in: query
+        name: page
+        type: integer
+      - default: 20
+        description: Results per page (max 100)
+        in: query
+        name: limit
+        type: integer
+      - description: Search across name, email, phone
+        in: query
+        name: q
+        type: string
+      - description: Filter by first name
+        in: query
+        name: first_name
+        type: string
+      - description: Filter by last name
+        in: query
+        name: last_name
+        type: string
+      - description: Filter by email
+        in: query
+        name: email
+        type: string
+      - description: Filter by phone
+        in: query
+        name: phone
+        type: string
+      - description: Filter by status (active, deactive)
+        in: query
+        name: status
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/internal_handler.MemberListResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/internal_handler.ErrorResponse'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/internal_handler.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/internal_handler.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/internal_handler.ErrorResponse'
+      security:
+      - CookieAuth: []
+      - BearerAPIKey: []
+      summary: List org members
+      tags:
+      - Members
+    post:
+      consumes:
+      - application/json
+      description: Add an existing user to the organization by email.
+      parameters:
+      - description: App slug
+        in: path
+        name: slug
+        required: true
+        type: string
+      - description: Organization ID
+        in: path
+        name: orgId
+        required: true
+        type: string
+      - description: Member details
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/internal_handler.CreateMemberRequest'
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: No Content
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/internal_handler.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/internal_handler.ErrorResponse'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/internal_handler.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/internal_handler.ErrorResponse'
+        "409":
+          description: Conflict
+          schema:
+            $ref: '#/definitions/internal_handler.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/internal_handler.ErrorResponse'
+      security:
+      - CookieAuth: []
+      - BearerAPIKey: []
+      summary: Add member
+      tags:
+      - Members
+  /api/apps/{slug}/orgs/{orgId}/members/{memberId}:
+    delete:
+      description: Remove a member from the organization. Cannot remove the owner.
+      parameters:
+      - description: App slug
+        in: path
+        name: slug
+        required: true
+        type: string
+      - description: Organization ID
+        in: path
+        name: orgId
+        required: true
+        type: string
+      - description: Member user ID
+        in: path
+        name: memberId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: No Content
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/internal_handler.ErrorResponse'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/internal_handler.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/internal_handler.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/internal_handler.ErrorResponse'
+      security:
+      - CookieAuth: []
+      - BearerAPIKey: []
+      summary: Remove member
+      tags:
+      - Members
+    patch:
+      consumes:
+      - application/json
+      description: Activate or deactivate an organization member.
+      parameters:
+      - description: App slug
+        in: path
+        name: slug
+        required: true
+        type: string
+      - description: Organization ID
+        in: path
+        name: orgId
+        required: true
+        type: string
+      - description: Member user ID
+        in: path
+        name: memberId
+        required: true
+        type: string
+      - description: New status
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/internal_handler.UpdateMemberRequest'
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: No Content
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/internal_handler.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/internal_handler.ErrorResponse'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/internal_handler.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/internal_handler.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/internal_handler.ErrorResponse'
+      security:
+      - CookieAuth: []
+      - BearerAPIKey: []
+      summary: Update member status
+      tags:
+      - Members
+  /api/apps/{slug}/orgs/{orgId}/sidebar:
+    get:
+      description: Returns the sidebar navigation configuration for an organization
+        workspace.
+      parameters:
+      - description: App slug
+        in: path
+        name: slug
+        required: true
+        type: string
+      - description: Organization ID
+        in: path
+        name: orgId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/internal_handler.SidebarResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/internal_handler.ErrorResponse'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/internal_handler.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/internal_handler.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/internal_handler.ErrorResponse'
+      security:
+      - CookieAuth: []
+      - BearerAPIKey: []
+      summary: Get org sidebar
+      tags:
+      - Sidebar
+  /api/apps/{slug}/orgs/{orgId}/teams:
+    get:
+      description: Returns a paginated list of teams in the organization.
+      parameters:
+      - description: App slug
+        in: path
+        name: slug
+        required: true
+        type: string
+      - description: Organization ID
+        in: path
+        name: orgId
+        required: true
+        type: string
+      - default: 1
+        description: Page number
+        in: query
+        name: page
+        type: integer
+      - default: 20
+        description: Results per page (max 100)
+        in: query
+        name: limit
+        type: integer
+      - description: Search by team name
+        in: query
+        name: q
+        type: string
+      - description: Filter by team name
+        in: query
+        name: name
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/internal_handler.TeamListResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/internal_handler.ErrorResponse'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/internal_handler.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/internal_handler.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/internal_handler.ErrorResponse'
+      security:
+      - CookieAuth: []
+      - BearerAPIKey: []
+      summary: List teams
+      tags:
+      - Teams
+    post:
+      consumes:
+      - application/json
+      description: Create a new team in the organization.
+      parameters:
+      - description: App slug
+        in: path
+        name: slug
+        required: true
+        type: string
+      - description: Organization ID
+        in: path
+        name: orgId
+        required: true
+        type: string
+      - description: Team details
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/internal_handler.CreateTeamRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/internal_handler.TeamResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/internal_handler.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/internal_handler.ErrorResponse'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/internal_handler.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/internal_handler.ErrorResponse'
+        "409":
+          description: Conflict
+          schema:
+            $ref: '#/definitions/internal_handler.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/internal_handler.ErrorResponse'
+      security:
+      - CookieAuth: []
+      - BearerAPIKey: []
+      summary: Create team
+      tags:
+      - Teams
+  /api/apps/{slug}/orgs/{orgId}/teams/{teamId}:
+    get:
+      description: Returns team details by ID.
+      parameters:
+      - description: App slug
+        in: path
+        name: slug
+        required: true
+        type: string
+      - description: Organization ID
+        in: path
+        name: orgId
+        required: true
+        type: string
+      - description: Team ID
+        in: path
+        name: teamId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/internal_handler.TeamResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/internal_handler.ErrorResponse'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/internal_handler.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/internal_handler.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/internal_handler.ErrorResponse'
+      security:
+      - CookieAuth: []
+      - BearerAPIKey: []
+      summary: Get team
+      tags:
+      - Teams
+  /api/apps/{slug}/orgs/{orgId}/teams/{teamId}/members:
+    delete:
+      consumes:
+      - application/json
+      description: Remove multiple members from the team in a single request.
+      parameters:
+      - description: App slug
+        in: path
+        name: slug
+        required: true
+        type: string
+      - description: Organization ID
+        in: path
+        name: orgId
+        required: true
+        type: string
+      - description: Team ID
+        in: path
+        name: teamId
+        required: true
+        type: string
+      - description: User IDs to remove
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/internal_handler.BulkRemoveTeamMembersRequest'
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: No Content
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/internal_handler.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/internal_handler.ErrorResponse'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/internal_handler.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/internal_handler.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/internal_handler.ErrorResponse'
+      security:
+      - CookieAuth: []
+      - BearerAPIKey: []
+      summary: Bulk remove team members
+      tags:
+      - Teams
+    get:
+      description: Returns a paginated list of members in the team.
+      parameters:
+      - description: App slug
+        in: path
+        name: slug
+        required: true
+        type: string
+      - description: Organization ID
+        in: path
+        name: orgId
+        required: true
+        type: string
+      - description: Team ID
+        in: path
+        name: teamId
+        required: true
+        type: string
+      - default: 1
+        description: Page number
+        in: query
+        name: page
+        type: integer
+      - default: 20
+        description: Results per page (max 100)
+        in: query
+        name: limit
+        type: integer
+      - description: Search across name, email, phone
+        in: query
+        name: q
+        type: string
+      - description: Filter by status
+        in: query
+        name: status
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/internal_handler.TeamMemberListResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/internal_handler.ErrorResponse'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/internal_handler.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/internal_handler.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/internal_handler.ErrorResponse'
+      security:
+      - CookieAuth: []
+      - BearerAPIKey: []
+      summary: List team members
+      tags:
+      - Teams
+    post:
+      consumes:
+      - application/json
+      description: Add one or more organization members to the team.
+      parameters:
+      - description: App slug
+        in: path
+        name: slug
+        required: true
+        type: string
+      - description: Organization ID
+        in: path
+        name: orgId
+        required: true
+        type: string
+      - description: Team ID
+        in: path
+        name: teamId
+        required: true
+        type: string
+      - description: User IDs to add
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/internal_handler.AddTeamMembersRequest'
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: No Content
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/internal_handler.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/internal_handler.ErrorResponse'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/internal_handler.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/internal_handler.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/internal_handler.ErrorResponse'
+      security:
+      - CookieAuth: []
+      - BearerAPIKey: []
+      summary: Add team members
+      tags:
+      - Teams
+  /api/apps/{slug}/orgs/{orgId}/teams/{teamId}/members/{userId}:
+    delete:
+      description: Remove a single member from the team.
+      parameters:
+      - description: App slug
+        in: path
+        name: slug
+        required: true
+        type: string
+      - description: Organization ID
+        in: path
+        name: orgId
+        required: true
+        type: string
+      - description: Team ID
+        in: path
+        name: teamId
+        required: true
+        type: string
+      - description: User ID to remove
+        in: path
+        name: userId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: No Content
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/internal_handler.ErrorResponse'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/internal_handler.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/internal_handler.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/internal_handler.ErrorResponse'
+      security:
+      - CookieAuth: []
+      - BearerAPIKey: []
+      summary: Remove team member
+      tags:
+      - Teams
+  /api/auth/apikeys:
+    get:
+      description: Returns all personal API keys for the authenticated user.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/internal_handler.ListAPIKeysResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/internal_handler.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/internal_handler.ErrorResponse'
+      security:
+      - CookieAuth: []
+      - BearerAPIKey: []
+      summary: List API keys
+      tags:
+      - API Keys
+    post:
+      consumes:
+      - application/json
+      description: Generate a new personal API key. The raw value is only returned
+        once.
+      parameters:
+      - description: API key label
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/internal_handler.CreateAPIKeyRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/internal_handler.CreateAPIKeyResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/internal_handler.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/internal_handler.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/internal_handler.ErrorResponse'
+      security:
+      - CookieAuth: []
+      - BearerAPIKey: []
+      summary: Create API key
+      tags:
+      - API Keys
+  /api/auth/apikeys/{id}:
+    delete:
+      description: Permanently delete a personal API key by ID.
+      parameters:
+      - description: API Key ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/internal_handler.MessageResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/internal_handler.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/internal_handler.ErrorResponse'
+      security:
+      - CookieAuth: []
+      - BearerAPIKey: []
+      summary: Delete API key
+      tags:
+      - API Keys
+  /api/auth/change-password:
+    post:
+      consumes:
+      - application/json
+      description: Change the authenticated user's password. Requires current password
+        (unless the account was created via OAuth).
+      parameters:
+      - description: Password change payload
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/internal_handler.ChangePasswordRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/internal_handler.MessageResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/internal_handler.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/internal_handler.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/internal_handler.ErrorResponse'
+      security:
+      - CookieAuth: []
+      - BearerAPIKey: []
+      summary: Change password
+      tags:
+      - Auth
+  /api/auth/google:
+    get:
+      description: Redirects the user to Google's consent screen. Sets an oauth_state
+        cookie for CSRF protection.
+      responses:
+        "307":
+          description: Redirect to Google
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/internal_handler.ErrorResponse'
+      summary: Start Google OAuth
+      tags:
+      - OAuth
+  /api/auth/google/callback:
+    get:
+      description: Handles the OAuth callback from Google. Validates state, exchanges
+        code for tokens, creates or links user account, sets auth cookies, and redirects
+        to frontend.
+      parameters:
+      - description: OAuth state parameter
+        in: query
+        name: state
+        required: true
+        type: string
+      - description: Authorization code
+        in: query
+        name: code
+        required: true
+        type: string
+      responses:
+        "307":
+          description: Redirect to frontend with error
+      summary: Google OAuth callback
+      tags:
+      - OAuth
+  /api/auth/login:
+    post:
+      consumes:
+      - application/json
+      description: Authenticate with email and password. Sets httpOnly auth cookies
+        on success.
+      parameters:
+      - description: Login credentials
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/internal_handler.LoginRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/internal_handler.SuccessResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/internal_handler.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/internal_handler.ErrorResponse'
+        "429":
+          description: Too Many Requests
+          schema:
+            $ref: '#/definitions/internal_handler.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/internal_handler.ErrorResponse'
+      summary: Log in
+      tags:
+      - Auth
+  /api/auth/logout:
+    post:
+      description: Invalidate the current session and clear auth cookies.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/internal_handler.MessageResponse'
+      summary: Log out
+      tags:
+      - Auth
+  /api/auth/me:
+    get:
+      description: Returns the authenticated user's profile.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/internal_handler.UserResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/internal_handler.ErrorResponse'
+      security:
+      - CookieAuth: []
+      - BearerAPIKey: []
+      summary: Get current user
+      tags:
+      - Auth
+    patch:
+      consumes:
+      - application/json
+      description: Update the authenticated user's first name and/or last name.
+      parameters:
+      - description: Fields to update
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/internal_handler.UpdateMeRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/internal_handler.UserResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/internal_handler.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/internal_handler.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/internal_handler.ErrorResponse'
+      security:
+      - CookieAuth: []
+      - BearerAPIKey: []
+      summary: Update profile
+      tags:
+      - Auth
+  /api/auth/refresh:
+    post:
+      description: Exchange the refresh token cookie for a new access token. Rotates
+        the refresh token.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/internal_handler.UserResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/internal_handler.ErrorResponse'
+      summary: Refresh access token
+      tags:
+      - Auth
+  /api/auth/signup:
+    post:
+      consumes:
+      - application/json
+      description: Register a new user with email and password. Sets httpOnly auth
+        cookies on success.
+      parameters:
+      - description: Signup credentials
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/internal_handler.SignupRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/internal_handler.SuccessResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/internal_handler.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/internal_handler.ErrorResponse'
+      summary: Create a new account
+      tags:
+      - Auth
+schemes:
+- http
+- https
+securityDefinitions:
+  BearerAPIKey:
+    description: Personal API key — send as "Bearer eol_k1_..."
+    in: header
+    name: Authorization
+    type: apiKey
+  CookieAuth:
+    description: JWT access token set automatically on login/signup.
+    in: cookie
+    name: eol_access
+    type: apiKey
+swagger: "2.0"

@@ -32,6 +32,19 @@ func (h *AppOrgHandler) userEmail(c *gin.Context, userID string) (string, error)
 	return user.Email, nil
 }
 
+// List godoc
+// @Summary      List user's organizations
+// @Description  Returns the authenticated user's organizations and pending invites for the given app.
+// @Tags         Organizations
+// @Produce      json
+// @Security     CookieAuth
+// @Security     BearerAPIKey
+// @Param        slug  path      string  true  "App slug"
+// @Success      200   {object}  OrgListResponse
+// @Failure      401   {object}  ErrorResponse
+// @Failure      404   {object}  ErrorResponse
+// @Failure      500   {object}  ErrorResponse
+// @Router       /api/apps/{slug}/orgs [get]
 func (h *AppOrgHandler) List(c *gin.Context) {
 	userID := middleware.GetUserID(c)
 	email, err := h.userEmail(c, userID)
@@ -48,6 +61,23 @@ func (h *AppOrgHandler) List(c *gin.Context) {
 	ok(c, result)
 }
 
+// Create godoc
+// @Summary      Create organization
+// @Description  Create a new organization under the given app. The authenticated user becomes the owner.
+// @Tags         Organizations
+// @Accept       json
+// @Produce      json
+// @Security     CookieAuth
+// @Security     BearerAPIKey
+// @Param        slug  path      string          true  "App slug"
+// @Param        body  body      CreateOrgRequest  true  "Organization details"
+// @Success      201   {object}  OrgResponse
+// @Failure      400   {object}  ErrorResponse
+// @Failure      401   {object}  ErrorResponse
+// @Failure      404   {object}  ErrorResponse
+// @Failure      409   {object}  ErrorResponse
+// @Failure      500   {object}  ErrorResponse
+// @Router       /api/apps/{slug}/orgs [post]
 func (h *AppOrgHandler) Create(c *gin.Context) {
 	userID := middleware.GetUserID(c)
 
@@ -67,6 +97,21 @@ func (h *AppOrgHandler) Create(c *gin.Context) {
 	created(c, gin.H{"organization": org})
 }
 
+// Get godoc
+// @Summary      Get organization
+// @Description  Returns organization details. Requires the user to be a member.
+// @Tags         Organizations
+// @Produce      json
+// @Security     CookieAuth
+// @Security     BearerAPIKey
+// @Param        slug   path      string  true  "App slug"
+// @Param        orgId  path      string  true  "Organization ID"
+// @Success      200    {object}  OrgResponse
+// @Failure      401    {object}  ErrorResponse
+// @Failure      403    {object}  ErrorResponse
+// @Failure      404    {object}  ErrorResponse
+// @Failure      500    {object}  ErrorResponse
+// @Router       /api/apps/{slug}/orgs/{orgId} [get]
 func (h *AppOrgHandler) Get(c *gin.Context) {
 	userID := middleware.GetUserID(c)
 
@@ -78,6 +123,21 @@ func (h *AppOrgHandler) Get(c *gin.Context) {
 	ok(c, gin.H{"organization": org})
 }
 
+// AcceptInvite godoc
+// @Summary      Accept invite
+// @Description  Accept a pending organization invite. The user must be the invite recipient.
+// @Tags         Invites
+// @Produce      json
+// @Security     CookieAuth
+// @Security     BearerAPIKey
+// @Param        slug      path      string  true  "App slug"
+// @Param        inviteId  path      string  true  "Invite ID"
+// @Success      200       {object}  OrgResponse
+// @Failure      401       {object}  ErrorResponse
+// @Failure      403       {object}  ErrorResponse
+// @Failure      404       {object}  ErrorResponse
+// @Failure      500       {object}  ErrorResponse
+// @Router       /api/apps/{slug}/invites/{inviteId}/accept [post]
 func (h *AppOrgHandler) AcceptInvite(c *gin.Context) {
 	userID := middleware.GetUserID(c)
 	email, err := h.userEmail(c, userID)
@@ -94,6 +154,25 @@ func (h *AppOrgHandler) AcceptInvite(c *gin.Context) {
 	ok(c, gin.H{"organization": org})
 }
 
+// CreateMember godoc
+// @Summary      Add member
+// @Description  Add an existing user to the organization by email.
+// @Tags         Members
+// @Accept       json
+// @Produce      json
+// @Security     CookieAuth
+// @Security     BearerAPIKey
+// @Param        slug   path  string              true  "App slug"
+// @Param        orgId  path  string              true  "Organization ID"
+// @Param        body   body  CreateMemberRequest  true  "Member details"
+// @Success      204    "No Content"
+// @Failure      400    {object}  ErrorResponse
+// @Failure      401    {object}  ErrorResponse
+// @Failure      403    {object}  ErrorResponse
+// @Failure      404    {object}  ErrorResponse
+// @Failure      409    {object}  ErrorResponse
+// @Failure      500    {object}  ErrorResponse
+// @Router       /api/apps/{slug}/orgs/{orgId}/members [post]
 func (h *AppOrgHandler) CreateMember(c *gin.Context) {
 	userID := middleware.GetUserID(c)
 
@@ -125,6 +204,25 @@ func (h *AppOrgHandler) CreateMember(c *gin.Context) {
 	c.Status(204)
 }
 
+// CreateInvite godoc
+// @Summary      Create invite
+// @Description  Send an invitation to join the organization.
+// @Tags         Invites
+// @Accept       json
+// @Produce      json
+// @Security     CookieAuth
+// @Security     BearerAPIKey
+// @Param        slug   path      string              true  "App slug"
+// @Param        orgId  path      string              true  "Organization ID"
+// @Param        body   body      CreateInviteRequest  true  "Invite details"
+// @Success      201    {object}  InviteResponse
+// @Failure      400    {object}  ErrorResponse
+// @Failure      401    {object}  ErrorResponse
+// @Failure      403    {object}  ErrorResponse
+// @Failure      404    {object}  ErrorResponse
+// @Failure      409    {object}  ErrorResponse
+// @Failure      500    {object}  ErrorResponse
+// @Router       /api/apps/{slug}/orgs/{orgId}/invites [post]
 func (h *AppOrgHandler) CreateInvite(c *gin.Context) {
 	userID := middleware.GetUserID(c)
 
@@ -156,6 +254,25 @@ func (h *AppOrgHandler) CreateInvite(c *gin.Context) {
 	created(c, gin.H{"invite": invite})
 }
 
+// UpdateInvite godoc
+// @Summary      Update invite
+// @Description  Update a pending invite's details (email, name, phone, status).
+// @Tags         Invites
+// @Accept       json
+// @Produce      json
+// @Security     CookieAuth
+// @Security     BearerAPIKey
+// @Param        slug      path      string              true  "App slug"
+// @Param        orgId     path      string              true  "Organization ID"
+// @Param        inviteId  path      string              true  "Invite ID"
+// @Param        body      body      UpdateInviteRequest  true  "Updated invite details"
+// @Success      200       {object}  InviteResponse
+// @Failure      400       {object}  ErrorResponse
+// @Failure      401       {object}  ErrorResponse
+// @Failure      403       {object}  ErrorResponse
+// @Failure      404       {object}  ErrorResponse
+// @Failure      500       {object}  ErrorResponse
+// @Router       /api/apps/{slug}/orgs/{orgId}/invites/{inviteId} [patch]
 func (h *AppOrgHandler) UpdateInvite(c *gin.Context) {
 	userID := middleware.GetUserID(c)
 
@@ -193,6 +310,22 @@ func (h *AppOrgHandler) UpdateInvite(c *gin.Context) {
 	ok(c, gin.H{"invite": invite})
 }
 
+// DeleteInvite godoc
+// @Summary      Delete invite
+// @Description  Permanently delete a pending invitation.
+// @Tags         Invites
+// @Produce      json
+// @Security     CookieAuth
+// @Security     BearerAPIKey
+// @Param        slug      path  string  true  "App slug"
+// @Param        orgId     path  string  true  "Organization ID"
+// @Param        inviteId  path  string  true  "Invite ID"
+// @Success      204       "No Content"
+// @Failure      401       {object}  ErrorResponse
+// @Failure      403       {object}  ErrorResponse
+// @Failure      404       {object}  ErrorResponse
+// @Failure      500       {object}  ErrorResponse
+// @Router       /api/apps/{slug}/orgs/{orgId}/invites/{inviteId} [delete]
 func (h *AppOrgHandler) DeleteInvite(c *gin.Context) {
 	userID := middleware.GetUserID(c)
 
@@ -210,6 +343,25 @@ func (h *AppOrgHandler) DeleteInvite(c *gin.Context) {
 	c.Status(204)
 }
 
+// UpdateMember godoc
+// @Summary      Update member status
+// @Description  Activate or deactivate an organization member.
+// @Tags         Members
+// @Accept       json
+// @Produce      json
+// @Security     CookieAuth
+// @Security     BearerAPIKey
+// @Param        slug      path  string               true  "App slug"
+// @Param        orgId     path  string               true  "Organization ID"
+// @Param        memberId  path  string               true  "Member user ID"
+// @Param        body      body  UpdateMemberRequest   true  "New status"
+// @Success      204       "No Content"
+// @Failure      400       {object}  ErrorResponse
+// @Failure      401       {object}  ErrorResponse
+// @Failure      403       {object}  ErrorResponse
+// @Failure      404       {object}  ErrorResponse
+// @Failure      500       {object}  ErrorResponse
+// @Router       /api/apps/{slug}/orgs/{orgId}/members/{memberId} [patch]
 func (h *AppOrgHandler) UpdateMember(c *gin.Context) {
 	userID := middleware.GetUserID(c)
 
@@ -236,6 +388,22 @@ func (h *AppOrgHandler) UpdateMember(c *gin.Context) {
 	c.Status(204)
 }
 
+// RemoveMember godoc
+// @Summary      Remove member
+// @Description  Remove a member from the organization. Cannot remove the owner.
+// @Tags         Members
+// @Produce      json
+// @Security     CookieAuth
+// @Security     BearerAPIKey
+// @Param        slug      path  string  true  "App slug"
+// @Param        orgId     path  string  true  "Organization ID"
+// @Param        memberId  path  string  true  "Member user ID"
+// @Success      204       "No Content"
+// @Failure      401       {object}  ErrorResponse
+// @Failure      403       {object}  ErrorResponse
+// @Failure      404       {object}  ErrorResponse
+// @Failure      500       {object}  ErrorResponse
+// @Router       /api/apps/{slug}/orgs/{orgId}/members/{memberId} [delete]
 func (h *AppOrgHandler) RemoveMember(c *gin.Context) {
 	userID := middleware.GetUserID(c)
 
@@ -266,6 +434,29 @@ func parseOrgUserListFilters(c *gin.Context) domain.OrgUserListFilters {
 	}
 }
 
+// ListMembers godoc
+// @Summary      List org members
+// @Description  Returns a paginated list of organization members with optional filters.
+// @Tags         Members
+// @Produce      json
+// @Security     CookieAuth
+// @Security     BearerAPIKey
+// @Param        slug        path      string  true   "App slug"
+// @Param        orgId       path      string  true   "Organization ID"
+// @Param        page        query     int     false  "Page number"               default(1)
+// @Param        limit       query     int     false  "Results per page (max 100)" default(20)
+// @Param        q           query     string  false  "Search across name, email, phone"
+// @Param        first_name  query     string  false  "Filter by first name"
+// @Param        last_name   query     string  false  "Filter by last name"
+// @Param        email       query     string  false  "Filter by email"
+// @Param        phone       query     string  false  "Filter by phone"
+// @Param        status      query     string  false  "Filter by status (active, deactive)"
+// @Success      200         {object}  MemberListResponse
+// @Failure      401         {object}  ErrorResponse
+// @Failure      403         {object}  ErrorResponse
+// @Failure      404         {object}  ErrorResponse
+// @Failure      500         {object}  ErrorResponse
+// @Router       /api/apps/{slug}/orgs/{orgId}/members [get]
 func (h *AppOrgHandler) ListMembers(c *gin.Context) {
 	userID := middleware.GetUserID(c)
 	params := pagination.ParsePageLimit(c)
@@ -288,6 +479,25 @@ func parseTeamListFilters(c *gin.Context) domain.TeamListFilters {
 	return domain.TeamListFilters{Q: q, Name: name}
 }
 
+// ListTeams godoc
+// @Summary      List teams
+// @Description  Returns a paginated list of teams in the organization.
+// @Tags         Teams
+// @Produce      json
+// @Security     CookieAuth
+// @Security     BearerAPIKey
+// @Param        slug   path      string  true   "App slug"
+// @Param        orgId  path      string  true   "Organization ID"
+// @Param        page   query     int     false  "Page number"               default(1)
+// @Param        limit  query     int     false  "Results per page (max 100)" default(20)
+// @Param        q      query     string  false  "Search by team name"
+// @Param        name   query     string  false  "Filter by team name"
+// @Success      200    {object}  TeamListResponse
+// @Failure      401    {object}  ErrorResponse
+// @Failure      403    {object}  ErrorResponse
+// @Failure      404    {object}  ErrorResponse
+// @Failure      500    {object}  ErrorResponse
+// @Router       /api/apps/{slug}/orgs/{orgId}/teams [get]
 func (h *AppOrgHandler) ListTeams(c *gin.Context) {
 	userID := middleware.GetUserID(c)
 	params := pagination.ParsePageLimit(c)
@@ -301,6 +511,25 @@ func (h *AppOrgHandler) ListTeams(c *gin.Context) {
 	ok(c, result)
 }
 
+// CreateTeam godoc
+// @Summary      Create team
+// @Description  Create a new team in the organization.
+// @Tags         Teams
+// @Accept       json
+// @Produce      json
+// @Security     CookieAuth
+// @Security     BearerAPIKey
+// @Param        slug   path      string           true  "App slug"
+// @Param        orgId  path      string           true  "Organization ID"
+// @Param        body   body      CreateTeamRequest  true  "Team details"
+// @Success      201    {object}  TeamResponse
+// @Failure      400    {object}  ErrorResponse
+// @Failure      401    {object}  ErrorResponse
+// @Failure      403    {object}  ErrorResponse
+// @Failure      404    {object}  ErrorResponse
+// @Failure      409    {object}  ErrorResponse
+// @Failure      500    {object}  ErrorResponse
+// @Router       /api/apps/{slug}/orgs/{orgId}/teams [post]
 func (h *AppOrgHandler) CreateTeam(c *gin.Context) {
 	userID := middleware.GetUserID(c)
 
@@ -320,6 +549,22 @@ func (h *AppOrgHandler) CreateTeam(c *gin.Context) {
 	created(c, gin.H{"team": team})
 }
 
+// GetTeam godoc
+// @Summary      Get team
+// @Description  Returns team details by ID.
+// @Tags         Teams
+// @Produce      json
+// @Security     CookieAuth
+// @Security     BearerAPIKey
+// @Param        slug    path      string  true  "App slug"
+// @Param        orgId   path      string  true  "Organization ID"
+// @Param        teamId  path      string  true  "Team ID"
+// @Success      200     {object}  TeamResponse
+// @Failure      401     {object}  ErrorResponse
+// @Failure      403     {object}  ErrorResponse
+// @Failure      404     {object}  ErrorResponse
+// @Failure      500     {object}  ErrorResponse
+// @Router       /api/apps/{slug}/orgs/{orgId}/teams/{teamId} [get]
 func (h *AppOrgHandler) GetTeam(c *gin.Context) {
 	userID := middleware.GetUserID(c)
 
@@ -331,6 +576,26 @@ func (h *AppOrgHandler) GetTeam(c *gin.Context) {
 	ok(c, gin.H{"team": team})
 }
 
+// ListTeamMembers godoc
+// @Summary      List team members
+// @Description  Returns a paginated list of members in the team.
+// @Tags         Teams
+// @Produce      json
+// @Security     CookieAuth
+// @Security     BearerAPIKey
+// @Param        slug    path      string  true   "App slug"
+// @Param        orgId   path      string  true   "Organization ID"
+// @Param        teamId  path      string  true   "Team ID"
+// @Param        page    query     int     false  "Page number"               default(1)
+// @Param        limit   query     int     false  "Results per page (max 100)" default(20)
+// @Param        q       query     string  false  "Search across name, email, phone"
+// @Param        status  query     string  false  "Filter by status"
+// @Success      200     {object}  TeamMemberListResponse
+// @Failure      401     {object}  ErrorResponse
+// @Failure      403     {object}  ErrorResponse
+// @Failure      404     {object}  ErrorResponse
+// @Failure      500     {object}  ErrorResponse
+// @Router       /api/apps/{slug}/orgs/{orgId}/teams/{teamId}/members [get]
 func (h *AppOrgHandler) ListTeamMembers(c *gin.Context) {
 	userID := middleware.GetUserID(c)
 	params := pagination.ParsePageLimit(c)
@@ -344,6 +609,25 @@ func (h *AppOrgHandler) ListTeamMembers(c *gin.Context) {
 	ok(c, result)
 }
 
+// AddTeamMembers godoc
+// @Summary      Add team members
+// @Description  Add one or more organization members to the team.
+// @Tags         Teams
+// @Accept       json
+// @Produce      json
+// @Security     CookieAuth
+// @Security     BearerAPIKey
+// @Param        slug    path  string                 true  "App slug"
+// @Param        orgId   path  string                 true  "Organization ID"
+// @Param        teamId  path  string                 true  "Team ID"
+// @Param        body    body  AddTeamMembersRequest   true  "User IDs to add"
+// @Success      204     "No Content"
+// @Failure      400     {object}  ErrorResponse
+// @Failure      401     {object}  ErrorResponse
+// @Failure      403     {object}  ErrorResponse
+// @Failure      404     {object}  ErrorResponse
+// @Failure      500     {object}  ErrorResponse
+// @Router       /api/apps/{slug}/orgs/{orgId}/teams/{teamId}/members [post]
 func (h *AppOrgHandler) AddTeamMembers(c *gin.Context) {
 	userID := middleware.GetUserID(c)
 
@@ -363,6 +647,23 @@ func (h *AppOrgHandler) AddTeamMembers(c *gin.Context) {
 	c.Status(204)
 }
 
+// RemoveTeamMember godoc
+// @Summary      Remove team member
+// @Description  Remove a single member from the team.
+// @Tags         Teams
+// @Produce      json
+// @Security     CookieAuth
+// @Security     BearerAPIKey
+// @Param        slug    path  string  true  "App slug"
+// @Param        orgId   path  string  true  "Organization ID"
+// @Param        teamId  path  string  true  "Team ID"
+// @Param        userId  path  string  true  "User ID to remove"
+// @Success      204     "No Content"
+// @Failure      401     {object}  ErrorResponse
+// @Failure      403     {object}  ErrorResponse
+// @Failure      404     {object}  ErrorResponse
+// @Failure      500     {object}  ErrorResponse
+// @Router       /api/apps/{slug}/orgs/{orgId}/teams/{teamId}/members/{userId} [delete]
 func (h *AppOrgHandler) RemoveTeamMember(c *gin.Context) {
 	userID := middleware.GetUserID(c)
 
@@ -374,6 +675,25 @@ func (h *AppOrgHandler) RemoveTeamMember(c *gin.Context) {
 	c.Status(204)
 }
 
+// BulkRemoveTeamMembers godoc
+// @Summary      Bulk remove team members
+// @Description  Remove multiple members from the team in a single request.
+// @Tags         Teams
+// @Accept       json
+// @Produce      json
+// @Security     CookieAuth
+// @Security     BearerAPIKey
+// @Param        slug    path  string                        true  "App slug"
+// @Param        orgId   path  string                        true  "Organization ID"
+// @Param        teamId  path  string                        true  "Team ID"
+// @Param        body    body  BulkRemoveTeamMembersRequest   true  "User IDs to remove"
+// @Success      204     "No Content"
+// @Failure      400     {object}  ErrorResponse
+// @Failure      401     {object}  ErrorResponse
+// @Failure      403     {object}  ErrorResponse
+// @Failure      404     {object}  ErrorResponse
+// @Failure      500     {object}  ErrorResponse
+// @Router       /api/apps/{slug}/orgs/{orgId}/teams/{teamId}/members [delete]
 func (h *AppOrgHandler) BulkRemoveTeamMembers(c *gin.Context) {
 	userID := middleware.GetUserID(c)
 

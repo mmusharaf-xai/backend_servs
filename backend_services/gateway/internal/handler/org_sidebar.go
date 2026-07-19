@@ -17,6 +17,21 @@ func NewOrgSidebarHandler(svc *service.OrgSidebarService) *OrgSidebarHandler {
 	return &OrgSidebarHandler{svc: svc}
 }
 
+// Get godoc
+// @Summary      Get org sidebar
+// @Description  Returns the sidebar navigation configuration for an organization workspace.
+// @Tags         Sidebar
+// @Produce      json
+// @Security     CookieAuth
+// @Security     BearerAPIKey
+// @Param        slug   path      string  true  "App slug"
+// @Param        orgId  path      string  true  "Organization ID"
+// @Success      200    {object}  SidebarResponse
+// @Failure      401    {object}  ErrorResponse
+// @Failure      403    {object}  ErrorResponse
+// @Failure      404    {object}  ErrorResponse
+// @Failure      500    {object}  ErrorResponse
+// @Router       /api/apps/{slug}/orgs/{orgId}/sidebar [get]
 func (h *OrgSidebarHandler) Get(c *gin.Context) {
 	userID := middleware.GetUserID(c)
 
